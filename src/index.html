@@ -127,16 +127,9 @@
 <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-database.js"></script>
 <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+<script src="js/config.js"></script>
 <script>
   // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyCvcT_-gI9uQgQ5ve6zdurW2UH84Pi4Z7s",
-    authDomain: "toodoo-c39fc.firebaseapp.com",
-    databaseURL: "https://toodoo-c39fc.firebaseio.com",
-    projectId: "toodoo-c39fc",
-    storageBucket: "toodoo-c39fc.appspot.com",
-    messagingSenderId: "976231061310"
-  };
   firebase.initializeApp(config);
   // Get a reference to the database service
   var database = firebase.database();
