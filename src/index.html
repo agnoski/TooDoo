@@ -1,0 +1,150 @@
+<!doctype html>
+<html ng-app="todoApp" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="test">
+    <meta name="author" content="agnosky">
+    <link rel="icon" href="images/favicon.ico">
+
+    <title>TooDoo</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet">
+  </head>
+
+  <body ng-controller="TodoAppCtrl">
+
+    <div class="container-fluid">
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-trasparent">
+      <a class="navbar-brand" href="#">TooDoo</a>
+      <div class="collapse navbar-collapse w-100 order-3" id="myNavbar">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+      <main role="main" class="inner cover text-center white-text">
+        <h1>TooDoo</h1>
+        <p class="lead">A simply, shared, easy to use TODO list for teams...</p>
+        <p class="lead">
+          <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
+        </p>
+      </main>
+
+    <div class="container">
+      <div class="row">
+        <div class="col mb-3">
+          <div class="card opacity-card">
+            <div class="card-header">
+              <h4>ADD TODO</h4>
+            </div>
+            <div class="card-body">
+              <form ng-submit="addTodo()" class="input-group mb-3">
+                <select ng-model="newTodoCategory" ng-options="todoCategory.name for todoCategory in todoCategories" class="custom-select col-2">
+                  <option value="" disabled selected>Category..</option>
+                </select>
+                <input ng-model="newTodoText" type="text" placeholder="Text.." class="form-control">
+                <select ng-model="newTodoPriority" ng-options="todoPriority.name for todoPriority in todoPriorities"class="custom-select col-2">
+                  <option value="" disabled selected>Priority..</option>
+                </select>
+                <div class="input-group-prepend">
+                  <span class="input-group-text">@</span>
+                </div>
+                <input ng-model="newTodoAssignedTo" type="text" placeholder="Added By.." class="form-control col-2">
+                <button class="btn btn-outline-secondary" type="submit">Add</button>
+             </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class ="col-8">
+        <div class="card opacity-card">
+          <div class="card-header">
+            <h4>TODO</h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-group">
+              <li ng-repeat="todo in todos | filter:{ 'status' : '!done' } | orderBy:['-timestamp', '-priority']" class="list-group-item">
+                <a data-toggle="collapse" data-target="#id{{ $id }}">{{ todo.text }}</a>
+                <div id="id{{ $id }}" class="collapse">
+                   <small>{{ todo.timestamp | date:'dd/MM/yyyy'}} <b>#{{ todo.category }}</b> Priority: <span class="badge badge-default" ng-class="{'badge-danger' : todo.priority === 1, 'badge-warning' : todo.priority === 2, 'badge-info' : todo.priority === 3}">{{ getPriorityName(todo) }}</span> Status: <span class="badge badge-default" ng-class="{'badge-secondary' : todo.status === 'pending', 'badge-primary' : todo.status === 'progress', 'badge-success' : todo.status === 'done'}">{{ todo.status }}</span> @{{ todo.assignedTo }}</small>
+                  <div class="btn-group btn-group-sm float-right" role="group">
+                    <button class="btn" type="button" data-toggle="tooltip" data-placement="top" title="Edit todo"><i class="far fa-edit"></i></button>
+                    <button ng-click="removeTodo($index, todo)" class="btn" type="button" data-toggle="tooltip" data-placement="top" title="Remove todo"><i class="far fa-trash-alt"></i></button>
+                    <button ng-click="updateTodoStatus($index, todo)" class="btn" type="button" data-toggle="tooltip" data-placement="top" title="Update todo status"><i class="far fa-flag"></i></button>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        </div>
+        <div class="col-4">
+        <div class="card opacity-card">
+          <div class="card-header">
+            <h4>DONE</h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-group">
+              <li ng-repeat="todo in todos | filter:{ 'status' : 'done' } | orderBy:'-timestamp'" class="list-group-item">{{ todo.text }}</li>
+            </ul>
+          </div>
+        </div>
+        </div>
+      </div>
+      </div>
+
+      <footer class="mastfoot mt-auto text-center">
+        <div class="inner">
+          <p>Created by <a href="#">Agno</a> :: Contact information <a href="#">@agnosky</a>.</p>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.4.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.4.1/firebase-database.js"></script>
+<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCvcT_-gI9uQgQ5ve6zdurW2UH84Pi4Z7s",
+    authDomain: "toodoo-c39fc.firebaseapp.com",
+    databaseURL: "https://toodoo-c39fc.firebaseio.com",
+    projectId: "toodoo-c39fc",
+    storageBucket: "toodoo-c39fc.appspot.com",
+    messagingSenderId: "976231061310"
+  };
+  firebase.initializeApp(config);
+  // Get a reference to the database service
+  var database = firebase.database();
+  var qeyelist = database.ref('lists/qeyeTodo');
+  qeyelist .on('value', function(snapshot) {
+    console.log(snapshot.val());
+  });
+</script>
+<script src="js/app.js"></script>
+  </body>
+</html>
